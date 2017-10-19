@@ -3,6 +3,7 @@
     package="cz.muni.fi.pv256.movio2.uco_422601">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,12 +11,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppCustomTheme">
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity">
+            <!--android:configChanges="orientation|screenSize|keyboardHidden">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MovieDetailActivity"
+            android:label="@string/title_activity_detail"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
     </application>
 
