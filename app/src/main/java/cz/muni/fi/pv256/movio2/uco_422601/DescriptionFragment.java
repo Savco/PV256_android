@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -48,10 +49,12 @@ public class DescriptionFragment extends Fragment {
 
         TextView titleTv = (TextView) view.findViewById(R.id.detail_movie);
         TextView titleLowTv = (TextView) view.findViewById(R.id.detail_movie_low);
+        ImageView image = (ImageView) view.findViewById(R.id.detail_image);
 
         if (mMovie != null) {
             titleTv.setText(mMovie.getTitle());
-            titleLowTv.setText(mMovie.getCoverPath());
+            titleLowTv.setText(mMovie.getBackdrop());
+            image.setImageResource(Integer.parseInt(mMovie.getCoverPath()));
         }
         return view;
     }

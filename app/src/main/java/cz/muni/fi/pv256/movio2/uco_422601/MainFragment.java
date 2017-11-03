@@ -1,8 +1,12 @@
 package cz.muni.fi.pv256.movio2.uco_422601;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
+import android.view.ViewStub;
 import android.widget.ArrayAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,10 +16,13 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -29,12 +36,6 @@ public class MainFragment extends Fragment {
     private int mPosition = ListView.INVALID_POSITION;
 
     private OnMovieSelectListener mListener;
-
-    private ArrayList<Movie> mMovies;
-
-    private Button mButton1;
-    private Button mButton2;
-    private Button mButton3;
 
     @Override
     public void onAttach(Context activity) {
@@ -54,57 +55,36 @@ public class MainFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if(true || !isConnected(this.getActivity())) {
+            Toast.makeText(getActivity(), "NO CONNECTION", Toast.LENGTH_LONG).show();
+        }
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
+
         View view = inflater.inflate(R.layout.fragment_names, container, false);
-
-        mMovies = new ArrayList<>();
-        mMovies.add(new Movie(getCurrentTime().getTime(), "", "Stopař Cory Lambert objeví uprostřed zasněžené pusté krajiny Wyomingu tělo mrtvé indiánské dívky. Vyšetřování se ujímá novopečená agentka FBI Jane Bannerová, která do odlehlé indiánské rezervace Wind River přijíždí z Las Vegas, zcela nepřipravená na drsné podnebí, jež tam panuje. Na pomoc s vyšetřováním si přizve stopaře Coryho a společně se snaží přijít na kloub záhadné smrti...", "Wind River", 4.5f));
-        mMovies.add(new Movie(getCurrentTime().getTime(), "", "Svět Kingsmanů se poprvé představil ve filmu Kingsman: Tajná služba jako nezávislá, mezinárodní, špionážní agentura pracující v hlibokém utajení a jejímž cílem je bezpečný svět. V dalším pokračování Kingsman: Zlatý kruh čelí naši hrdinové novým výzvám. Centrála Kingsmanů je zničena a celý svět se stává rukojmím. Kingsmany čekají nové úkoly i překážky. Spojí se se spřátelenou americkou špionážní organizací Statesman. Obě dvě agentury musí společnými silami porazit nebezpečného nepřítele a zachránit tak svět.", "Kingsman: Zlatý kruh ", 3.5f));
-        mMovies.add(new Movie(getCurrentTime().getTime(), "", "Harry Hole (Michael Fassbender) je enfant terrible týmu, vyšetřujícího zločiny v norské metropoli. Na jedné straně je to výjimečně dobrý detektiv, jehož netradiční metody skoro vždy vedou k úspěchu, na straně druhé se však jedná o nezodpovědného alkoholika s tolika prohřešky, že je už dál nechtějí přehlížet nejen jeho nadřízení, ale ani jeho přítelkyně Rachel (Charlotte Gainsbourg), s níž se právě rozešel. Jediné, co stojí mezi ním a pitím, je případ, který by ho přivedl na jiné myšlenky.", "Sněhulák ", 3.0f));
-
-        mButton1 = (Button) view.findViewById(R.id.movie1);
-        mButton2 = (Button) view.findViewById(R.id.movie2);
-        mButton3 = (Button) view.findViewById(R.id.movie3);
-
-        View.OnClickListener clickListener = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.movie1:
-                        mListener.onMovieSelect(mMovies.get(0));
-                        break;
-                    case R.id.movie2:
-                        mListener.onMovieSelect(mMovies.get(1));
-                        break;
-                    case R.id.movie3:
-                        mListener.onMovieSelect(mMovies.get(2));
-                        break;
-                }
-            }
-        };
-
-        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
-            mPosition = savedInstanceState.getInt(SELECTED_KEY);
-        }
-
-        mButton1.setOnClickListener(clickListener);
-        mButton2.setOnClickListener(clickListener);
-        mButton3.setOnClickListener(clickListener);
-
-        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
-            mPosition = savedInstanceState.getInt(SELECTED_KEY);
-        }
 
         return view;
     }
 
     public interface OnMovieSelectListener {
-        void onMovieSelect(Movie movie);
+        void onMovieSelect(int position);
     }
 
-    private Date getCurrentTime() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+1:00"));
-        return cal.getTime();
+    public interface OnMovieLongClickListener {
+        void onMovieLongClick(int position);
+    }
+
+    private boolean isConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
