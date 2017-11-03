@@ -22,7 +22,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private static final int TYPE_GENRE = 0;
     private static final int TYPE_MOVIE = 1;
-    private static final int TYPE_NO_DATA = 2;
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -43,9 +42,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             case TYPE_MOVIE:
                 view = inflater.inflate(R.layout.single_movie, parent, false);
                 return new MovieViewHolder(view, mContext);
-            case TYPE_NO_DATA:
-                view = inflater.inflate(R.layout.no_data, parent, false);
-                return new EmptyViewHolder(view);
         }
         return null;
     }
@@ -72,10 +68,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             case TYPE_GENRE:
                 GenreViewHolder genreHolder = (GenreViewHolder) holder;
                 genreHolder.text.setText((String) mData.get(position));
-                break;
-            case TYPE_NO_DATA:
-                EmptyViewHolder emptyView = (EmptyViewHolder) holder;
-                emptyView.text.setText(mData.get(position).toString() /*noDataLabel*/);
                 break;
         }
     }
@@ -126,14 +118,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             };
             mLayout.setOnClickListener(clickListener);
             mLayout.setOnLongClickListener(longClickListener);
-        }
-    }
-    public static class EmptyViewHolder extends RecyclerView.ViewHolder {
-        public TextView text;
-
-        public EmptyViewHolder(View itemView) {
-            super(itemView);
-            text = (TextView) itemView.findViewById(R.id.no_data_text);
         }
     }
 }

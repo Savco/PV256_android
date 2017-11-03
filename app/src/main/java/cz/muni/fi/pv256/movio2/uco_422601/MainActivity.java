@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnMo
 
         mData = new ArrayList<Object>();
 
-        mData.add("Triller");
+        mData.add("Thriller");
         for (int i = 0; i < 2; i++) {
             mData.add(new Movie(getCurrentTime().getTime(), Integer.toString(R.drawable.windriver), "Stopař Cory Lambert objeví uprostřed zasněžené pusté krajiny Wyomingu tělo mrtvé indiánské dívky. Vyšetřování se ujímá novopečená agentka FBI Jane Bannerová, která do odlehlé indiánské rezervace Wind River přijíždí z Las Vegas, zcela nepřipravená na drsné podnebí, jež tam panuje. Na pomoc s vyšetřováním si přizve stopaře Coryho a společně se snaží přijít na kloub záhadné smrti...", "Wind River", 4.5f));
             mData.add(new Movie(getCurrentTime().getTime(), Integer.toString(R.drawable.snowman), "Harry Hole (Michael Fassbender) je enfant terrible týmu, vyšetřujícího zločiny v norské metropoli. Na jedné straně je to výjimečně dobrý detektiv, jehož netradiční metody skoro vždy vedou k úspěchu, na straně druhé se však jedná o nezodpovědného alkoholika s tolika prohřešky, že je už dál nechtějí přehlížet nejen jeho nadřízení, ale ani jeho přítelkyně Rachel (Charlotte Gainsbourg), s níž se právě rozešel. Jediné, co stojí mezi ním a pitím, je případ, který by ho přivedl na jiné myšlenky.", "Sněhulák ", 3.0f));
@@ -73,9 +73,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnMo
             mData.add(new Movie(getCurrentTime().getTime(), Integer.toString(R.drawable.kingsman), "Svět Kingsmanů se poprvé představil ve filmu Kingsman: Tajná služba jako nezávislá, mezinárodní, špionážní agentura pracující v hlibokém utajení a jejímž cílem je bezpečný svět. V dalším pokračování Kingsman: Zlatý kruh čelí naši hrdinové novým výzvám. Centrála Kingsmanů je zničena a celý svět se stává rukojmím. Kingsmany čekají nové úkoly i překážky. Spojí se se spřátelenou americkou špionážní organizací Statesman. Obě dvě agentury musí společnými silami porazit nebezpečného nepřítele a zachránit tak svět.", "Kingsman: Zlatý kruh ", 3.5f));
         }
 
-        Log.d(TAG, Integer.toString(mData.size()));
         ViewStub emptyView = (ViewStub) findViewById(R.id.empty);
-
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
 

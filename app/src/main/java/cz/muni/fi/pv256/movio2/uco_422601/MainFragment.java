@@ -56,7 +56,7 @@ public class MainFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if(true || !isConnected(this.getActivity())) {
+        if(!isConnected(this.getActivity())) {
             Toast.makeText(getActivity(), "NO CONNECTION", Toast.LENGTH_LONG).show();
         }
 
