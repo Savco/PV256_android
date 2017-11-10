@@ -32,7 +32,7 @@ public class DescriptionFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, " onCreate method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onCreate method");
         super.onCreate(savedInstanceState);
         mContext = getActivity();
         Bundle args = getArguments();

@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="top"
                 android:textAppearance="?android:textAppearanceLarge"
-                android:textColor="?colorPrimaryDark"
+                android:textColor="?colorPrimary"
                 android:textSize="20pt" />
 
             <TextView

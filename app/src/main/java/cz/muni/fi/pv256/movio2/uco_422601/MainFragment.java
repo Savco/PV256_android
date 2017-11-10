@@ -44,7 +44,7 @@ public class MainFragment extends Fragment {
         try {
             mListener = (OnMovieSelectListener) activity;
         } catch (ClassCastException e) {
-            Log.e(TAG, "Activity must implement OnMovieSelectListener", e);
+            if (BuildConfig.LOGGING) Log.e(TAG, "Activity must implement OnMovieSelectListener", e);
         }
     }
     @Override
@@ -90,27 +90,27 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, " onStart method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onStart method");
     }
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, " onResume method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onResume method");
     }
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, " onPause method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onPause method");
     }
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, " onStop method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onStop method");
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, " onDestroy method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onDestroy method");
     }
 }
 
