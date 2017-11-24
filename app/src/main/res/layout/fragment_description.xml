@@ -7,39 +7,54 @@
         android:layout_height="fill_parent" >
 
         <ImageView
-            android:id="@+id/detail_image"
+            android:id="@+id/poster_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:adjustViewBounds="false"
+            android:adjustViewBounds="true"
             android:cropToPadding="false"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitCenter"
+            android:layout_alignParentTop="true"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:id="@+id/title_row"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/poster_image"
+            android:background="?attr/colorPrimary"
             android:gravity="center_horizontal"
-            android:layout_below="@id/detail_image"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <ImageView
+                android:id="@+id/cover_image"
+                android:layout_width="105dp"
+                android:layout_height="153dp"
+                android:layout_alignParentTop="true"
+                android:adjustViewBounds="false"
+                android:cropToPadding="true"
+                android:scaleType="fitStart"
+                />
 
             <TextView
                 android:id="@+id/detail_movie"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="top"
+                android:layout_width="198dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
                 android:textAppearance="?android:textAppearanceLarge"
-                android:textColor="?colorPrimary"
-                android:textSize="20pt" />
+                android:textColor="#FFFFFF"
+                android:textSize="20pt"
+                />
 
-            <TextView
-                android:id="@+id/detail_movie_low"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:textAppearanceLarge"
-                android:textColor="?colorPrimaryDark"
-                android:textSize="6pt" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/detail_movie_low"
+            android:layout_below="@id/title_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="?attr/colorPrimaryDark"
+            android:textSize="8pt"/>
     </RelativeLayout>
 
 </ScrollView>

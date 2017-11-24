@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +41,9 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         View view;
         switch(viewType) {
             case TYPE_GENRE:
+                Log.d(TAG, " creating ViewHolder, type:" + viewType);
                 view = inflater.inflate(R.layout.single_genre, parent, false);
+
                 return new GenreViewHolder(view);
             case TYPE_MOVIE:
                 view = inflater.inflate(R.layout.single_movie, parent, false);
@@ -61,9 +67,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 Movie movie = (Movie) mData.get(position);
                 movieHolder.title.setText(movie.getTitle());
                 movieHolder.rating.setText(Float.toString(movie.getPopularity()));
-                if(!movie.getCoverPath().isEmpty() && mContext != null) {
-                    movieHolder.image.setImageDrawable(mContext.getDrawable(Integer.parseInt(movie.getCoverPath())));
-                }
+                Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + movie.getCoverPath()).into(movieHolder.image);
                 break;
             case TYPE_GENRE:
                 GenreViewHolder genreHolder = (GenreViewHolder) holder;
@@ -86,6 +90,11 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
+    public void dataUpdate(List<Object> data) {
+        this.mData = data;
+        notifyDataSetChanged();
+    }
+
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public ImageView image;
@@ -101,6 +110,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Log.d(TAG, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" +getAdapterPosition() + "aaaaaaaaaaaaa");
                     if(context != null) {
                         ((MainActivity) context).onMovieSelect(getAdapterPosition());
                     }

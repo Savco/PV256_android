@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by micha on 19. 10. 2017.
  */
@@ -49,12 +51,15 @@ public class DescriptionFragment extends Fragment {
 
         TextView titleTv = (TextView) view.findViewById(R.id.detail_movie);
         TextView titleLowTv = (TextView) view.findViewById(R.id.detail_movie_low);
-        ImageView image = (ImageView) view.findViewById(R.id.detail_image);
+        ImageView posterImage = (ImageView) view.findViewById(R.id.poster_image);
+        ImageView coverImage = (ImageView) view.findViewById(R.id.cover_image);
 
         if (mMovie != null) {
             titleTv.setText(mMovie.getTitle());
-            titleLowTv.setText(mMovie.getBackdrop());
-            image.setImageResource(Integer.parseInt(mMovie.getCoverPath()));
+            titleLowTv.setText("To be done later");
+            Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + mMovie.getBackdrop()).into(posterImage);
+            Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + mMovie.getCoverPath()).into(coverImage);
+            //image.setImageResource(Integer.parseInt(mMovie.getCoverPath()));
         }
         return view;
     }
