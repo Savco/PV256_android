@@ -2,6 +2,7 @@ package cz.muni.fi.pv256.movio2.uco_422601;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.Date;
  * Created by micha on 11/23/2017.
  */
 
-public class MovieDTO {
+public class MovieDTO implements Serializable {
 
     @SerializedName("release_date")
     private String mRealeaseDate;

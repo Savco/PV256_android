@@ -2,7 +2,6 @@ package cz.muni.fi.pv256.movio2.uco_422601;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by micha on 19. 10. 2017.
@@ -10,15 +9,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Movie implements Parcelable{
 
-    //@SerializedName("release_date")
     private long mRealeaseDate;
-    //@SerializedName("poster_path")
     private String mCoverPath;
-    //@SerializedName("title")
     private String mTitle;
-    //@SerializedName("backdrop_path")
     private String mBackdrop;
-    //@SerializedName("popularity")
     private float mPopularity;
 
     public Movie(long realeaseDate, String coverPath, String backdrop, String title, float popularity) {
@@ -89,6 +83,11 @@ public class Movie implements Parcelable{
         dest.writeString(mTitle);
         dest.writeString(mBackdrop);
         dest.writeFloat(mPopularity);
+    }
+
+    @Override
+    public String toString() {
+        return mTitle + " " + mRealeaseDate + " " + mPopularity;
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {

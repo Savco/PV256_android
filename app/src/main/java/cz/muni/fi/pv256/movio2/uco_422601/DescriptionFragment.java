@@ -46,7 +46,6 @@ public class DescriptionFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //Log.d(TAG, " onCreateView method");
         View view = inflater.inflate(R.layout.fragment_description, container, false);
 
         TextView titleTv = (TextView) view.findViewById(R.id.detail_movie);
@@ -59,7 +58,6 @@ public class DescriptionFragment extends Fragment {
             titleLowTv.setText("To be done later");
             Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + mMovie.getBackdrop()).into(posterImage);
             Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + mMovie.getCoverPath()).into(coverImage);
-            //image.setImageResource(Integer.parseInt(mMovie.getCoverPath()));
         }
         return view;
     }

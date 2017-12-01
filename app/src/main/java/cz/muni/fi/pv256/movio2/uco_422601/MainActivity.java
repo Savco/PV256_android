@@ -4,15 +4,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.SharedPreferences;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ViewStub;
 import android.widget.Button;
-import android.view.View;
 import android.content.Intent;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -58,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnMo
             mTwoPane = false;
             getSupportActionBar().setElevation(0f);
         }
-
         mData = new ArrayList<Object>();
     }
 

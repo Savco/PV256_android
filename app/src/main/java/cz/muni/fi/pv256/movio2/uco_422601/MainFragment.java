@@ -1,14 +1,15 @@
 package cz.muni.fi.pv256.movio2.uco_422601;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.os.Debug;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.ViewStub;
-import android.widget.ArrayAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -16,19 +17,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
 
 import static cz.muni.fi.pv256.movio2.uco_422601.MainActivity.mData;
+import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.ACTION;
+import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.BEST90;
+import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.ERROR;
+import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.NO_ERROR;
+import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.POPULAR;
 
 /**
  * Created by micha on 19. 10. 2017.
@@ -44,7 +42,7 @@ public class MainFragment extends Fragment {
     private ViewStub mEmptyView;
     private MovieAdapter mMovieAdapter;
     private OnMovieSelectListener mListener;
-    private DownloadingTask mDownloadingTask;
+    private MovieDownloadReceiver mReceiver;
 
     @Override
     public void onAttach(Context activity) {
@@ -59,7 +57,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
         mListener = null; //Avoid leaking the Activity
     }
 
@@ -77,12 +74,16 @@ public class MainFragment extends Fragment {
             }
             mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
+            Intent intent = new Intent(getActivity(), MovieDownloadService.class);
+            getActivity().startService(intent);
+
             mMovieAdapter = new MovieAdapter(getContext(), new ArrayList<Object>());
             mRecyclerView.setAdapter(mMovieAdapter);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-            mDownloadingTask = new DownloadingTask();
-            mDownloadingTask.execute();
+            IntentFilter intentFilter = new IntentFilter(ACTION);
+            mReceiver = new MovieDownloadReceiver();
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, intentFilter);
         }
         return view;
     }
@@ -109,57 +110,6 @@ public class MainFragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private class DownloadingTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            Log.d(TAG, "doInBackground - thread: " + Thread.currentThread().getName());
-            //if mData.isEmpty()
-            try {
-                List<Movie> popular = Networking.getPopularMovies();
-                List<Movie> old = Networking.getBestMoviesIn90s();
-                mData.add("Popular");
-                mData.addAll(popular);
-                mData.add("Best in the 90s");
-                mData.addAll(old);
-                MainFragment.this.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mMovieAdapter.dataUpdate(mData);
-                    }
-                });
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            Log.d(TAG, "onPostExecute - thread: " + Thread.currentThread().getName());
-            if (result)
-                Toast.makeText(getActivity().getApplicationContext(), "Data sucesfully downloaded", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(getActivity().getApplicationContext(), "Data not recieved", Toast.LENGTH_SHORT).show();
-
-            if (mData.isEmpty()) {
-                mRecyclerView.setVisibility(View.GONE);
-                mEmptyView.setVisibility(View.VISIBLE);
-            } else {
-                mRecyclerView.setVisibility(View.VISIBLE);
-                mEmptyView.setVisibility(View.GONE);
-            }
-            mDownloadingTask = null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            Log.d(TAG, "onCancelled - thread: " + Thread.currentThread().getName());
-        }
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -168,11 +118,15 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        IntentFilter intentFilter = new IntentFilter("MovieDownloadService");
+        mReceiver = new MovieDownloadReceiver();
+        getActivity().registerReceiver(mReceiver, intentFilter);
         if (BuildConfig.LOGGING) Log.d(TAG, " onResume method");
     }
     @Override
     public void onPause() {
         super.onPause();
+        getActivity().unregisterReceiver(mReceiver);
         if (BuildConfig.LOGGING) Log.d(TAG, " onPause method");
     }
     @Override
@@ -185,5 +139,35 @@ public class MainFragment extends Fragment {
         super.onDestroy();
         if (BuildConfig.LOGGING) Log.d(TAG, " onDestroy method");
     }
+
+    public class MovieDownloadReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String error = intent.getStringExtra(ERROR);
+            if(error == NO_ERROR) {
+                ArrayList<MovieDTO> popularMovieList = (ArrayList<MovieDTO>)intent.getSerializableExtra(POPULAR);
+                ArrayList<MovieDTO> best90MovieList = (ArrayList<MovieDTO>)intent.getSerializableExtra(BEST90);
+
+                mData.add("Popular");
+                addMovies(popularMovieList);
+                mData.add("Best in the 90s");
+                addMovies(best90MovieList);
+
+                if (mMovieAdapter != null) mMovieAdapter.dataUpdate(mData);
+            }
+            else {
+                mRecyclerView.setVisibility(View.GONE);
+                mEmptyView.setVisibility(View.VISIBLE);
+            }
+        }
+
+        private void addMovies(ArrayList<MovieDTO> movieList){
+            for (MovieDTO m : movieList) {
+                Movie movie = new Movie(m.getRealeaseDateAsLong(), m.getCoverPath(), m.getBackdrop(), m.getTitle(), m.getPopularityAsFloat());
+                mData.add(movie);
+            }
+        }
+    }
+
 }
 
