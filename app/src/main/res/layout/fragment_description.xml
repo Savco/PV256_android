@@ -1,0 +1,61 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <ImageView
+            android:id="@+id/poster_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            android:layout_alignParentTop="true"/>
+
+        <LinearLayout
+            android:id="@+id/title_row"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/poster_image"
+            android:background="?attr/colorPrimary"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <ImageView
+                android:id="@+id/cover_image"
+                android:layout_width="105dp"
+                android:layout_height="153dp"
+                android:layout_alignParentTop="true"
+                android:adjustViewBounds="false"
+                android:cropToPadding="true"
+                android:scaleType="fitStart"
+                />
+
+            <TextView
+                android:id="@+id/detail_movie"
+                android:layout_width="198dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="#FFFFFF"
+                android:textSize="20pt"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/detail_movie_low"
+            android:layout_below="@id/title_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="?attr/colorPrimaryDark"
+            android:textSize="8pt"/>
+    </RelativeLayout>
+
+</ScrollView>
+
