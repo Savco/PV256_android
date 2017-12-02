@@ -4,9 +4,13 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +32,7 @@ public class MovieDownloadService extends IntentService {
     public static final String ERROR = "error";
     public static final String NO_ERROR = "no error";
     public static final String CONNECTION_ERROR = "connection error";
+    public static final String CHANNEL = "default";
 
     public MovieDownloadService() {
         super(TAG);
@@ -44,7 +49,6 @@ public class MovieDownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(ACTION);
 
@@ -56,19 +60,26 @@ public class MovieDownloadService extends IntentService {
 
             MovieAPI service = retrofit.create(MovieAPI.class);
 
-            startDownloadNotification();
-            Call<MovieList> requestPop = service.getPopularMovies();
-            Call<MovieList> requestBest = service.getBestMoviesIn90s();
+            if(!isConnected(this)) {
+                Toast.makeText(this, "NO CONNECTION", Toast.LENGTH_LONG).show();
+                broadcastIntent.putExtra(ERROR, CONNECTION_ERROR);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+                errorDownloadNotification();
+            }
+            else {
+                startDownloadNotification();
+                Call<MovieList> requestPop = service.getPopularMovies();
+                Call<MovieList> requestBest = service.getBestMoviesIn90s();
 
-            MovieList popularMovies = requestPop.execute().body();
-            MovieList best90Movies = requestBest.execute().body();
+                MovieList popularMovies = requestPop.execute().body();
+                MovieList best90Movies = requestBest.execute().body();
 
-            broadcastIntent.putExtra(POPULAR, new ArrayList<MovieDTO>(popularMovies.getResults()));
-            broadcastIntent.putExtra(BEST90, new ArrayList<MovieDTO>(best90Movies.getResults()));
-            broadcastIntent.putExtra(ERROR, NO_ERROR);
-
-            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
-            doneDownloadNotification();
+                broadcastIntent.putExtra(POPULAR, new ArrayList<MovieDTO>(popularMovies.getResults()));
+                broadcastIntent.putExtra(BEST90, new ArrayList<MovieDTO>(best90Movies.getResults()));
+                broadcastIntent.putExtra(ERROR, NO_ERROR);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+                doneDownloadNotification();
+            }
         } catch (IOException e) {
             e.printStackTrace();
             broadcastIntent.putExtra(ERROR, CONNECTION_ERROR);
@@ -76,33 +87,50 @@ public class MovieDownloadService extends IntentService {
         }
     }
 
-    private void startDownloadNotification() {
-        Intent intent = new Intent(this, MainFragment.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+    private boolean isConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
-        Notification n  = new Notification.Builder(this)
-                .setContentTitle(getResources().getString(R.string.app_name))
-                .setContentText("Starting download")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true).build();
+    private void errorDownloadNotification() {
+        Notification.Builder n = prepareNotification();
+        n.setContentText("Error downloading data").setSmallIcon(R.mipmap.ic_error_download);
 
         NotificationManager notificationManager =  (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, n); //0 udává číslo notifikace. Na některých zařízeních nefunguje jinačí int než 0.
+        notificationManager.notify(0, n.build()); //0 udává číslo notifikace. Na některých zařízeních nefunguje jinačí int než 0.
+    }
+
+    private void startDownloadNotification() {
+        Notification.Builder n = prepareNotification();
+        n.setContentText("Starting download").setSmallIcon(R.mipmap.ic_launcher);
+
+        NotificationManager notificationManager =  (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, n.build()); //0 udává číslo notifikace. Na některých zařízeních nefunguje jinačí int než 0.
     }
 
     private void doneDownloadNotification() {
-        Intent intent = new Intent(this, MainFragment.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        Notification n  = new Notification.Builder(this)
-                .setContentTitle(getResources().getString(R.string.app_name))
-                .setContentText("Download done")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true).build();
+        Notification.Builder n = prepareNotification();
+        n.setContentText("Download done").setSmallIcon(R.mipmap.ic_launcher);
 
         NotificationManager notificationManager =  (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, n); //0 udává číslo notifikace. Na některých zařízeních nefunguje jinačí int než 0.
+        notificationManager.notify(0, n.build()); //0 udává číslo notifikace. Na některých zařízeních nefunguje jinačí int než 0.
+    }
+
+    private Notification.Builder prepareNotification() {
+        Intent intent = new Intent(this, MainFragment.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Builder n;
+        if (Build.VERSION.SDK_INT < 26) {
+            n  = new Notification.Builder(this);
+        }
+        else {
+            n = new Notification.Builder(this, CHANNEL);
+        }
+        n.setContentTitle(getResources().getString(R.string.app_name))
+                .setContentIntent(pIntent)
+                .setAutoCancel(true).build();
+        return n;
     }
 }

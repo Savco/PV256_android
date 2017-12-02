@@ -113,4 +113,3 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnMo
         if (BuildConfig.LOGGING) Log.d(TAG, " onDestroy method");
     }
 }
-

@@ -1,11 +1,14 @@
 package cz.muni.fi.pv256.movio2.uco_422601;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 import static cz.muni.fi.pv256.movio2.uco_422601.MainActivity.mData;
 import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.ACTION;
 import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.BEST90;
+import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.CHANNEL;
 import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.ERROR;
 import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.NO_ERROR;
 import static cz.muni.fi.pv256.movio2.uco_422601.MovieDownloadService.POPULAR;
@@ -65,14 +69,15 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_names, container, false);
         mEmptyView = (ViewStub) view.findViewById(R.id.empty);
 
-        if(!isConnected(this.getActivity())) {
-            Toast.makeText(getActivity(), "NO CONNECTION", Toast.LENGTH_LONG).show();
-        }
-        else {
+//        if(!isConnected(this.getActivity())) {
+//            Toast.makeText(getActivity(), "NO CONNECTION", Toast.LENGTH_LONG).show();
+//        }
+//        else {
             if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
                 mPosition = savedInstanceState.getInt(SELECTED_KEY);
             }
             mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+            initChannels(getActivity());
 
             Intent intent = new Intent(getActivity(), MovieDownloadService.class);
             getActivity().startService(intent);
@@ -84,7 +89,8 @@ public class MainFragment extends Fragment {
             IntentFilter intentFilter = new IntentFilter(ACTION);
             mReceiver = new MovieDownloadReceiver();
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, intentFilter);
-        }
+ //       }
+
         return view;
     }
 
@@ -104,11 +110,11 @@ public class MainFragment extends Fragment {
         void onMovieLongClick(int position);
     }
 
-    private boolean isConnected(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+//    private boolean isConnected(Context context) {
+//        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+//        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+//    }
 
     @Override
     public void onStart() {
@@ -169,5 +175,16 @@ public class MainFragment extends Fragment {
         }
     }
 
+    public void initChannels(Context context) {
+        if (Build.VERSION.SDK_INT < 26) {
+            return;
+        }
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel channel = new NotificationChannel(CHANNEL,
+                "Download",
+                NotificationManager.IMPORTANCE_LOW);
+        notificationManager.createNotificationChannel(channel);
+    }
 }
 
