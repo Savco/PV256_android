@@ -8,6 +8,20 @@
         android:background="?attr/colorAccent"
         android:orientation="vertical">
 
+        <!--<android.support.v7.widget.SwitchCompat-->
+            <!--android:id="@+id/switchForActionBar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="47dp"-->
+            <!--android:background="?attr/colorPrimaryDark"-->
+            <!--android:checked="false"-->
+            <!--android:paddingStart="20dp"-->
+            <!--android:paddingEnd="20dp"-->
+            <!--android:text="Favourites"-->
+            <!--android:textAlignment="textStart"-->
+            <!--android:textColor="#FFFFFFFF"-->
+            <!--android:textSize="18sp"-->
+            <!--android:textStyle="italic"/>-->
+
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"

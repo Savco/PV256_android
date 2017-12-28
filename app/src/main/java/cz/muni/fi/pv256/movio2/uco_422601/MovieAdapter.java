@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private static final int TYPE_GENRE = 0;
     private static final int TYPE_MOVIE = 1;
+    private static final String DATE_FORMAT = "yyyyMMdd";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -65,7 +67,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 Movie movie = (Movie) mData.get(position);
                 movieHolder.title.setText(movie.getTitle());
                 movieHolder.rating.setText(Float.toString(movie.getPopularity()));
-                Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + movie.getCoverPath()).into(movieHolder.image);
+                Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + movie.getBackdrop()).into(movieHolder.image);
                 break;
             case TYPE_GENRE:
                 GenreViewHolder genreHolder = (GenreViewHolder) holder;
@@ -97,6 +99,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         public TextView title;
         public ImageView image;
         public TextView rating;
+        public TextView date;
         private RelativeLayout mLayout;
 
         public MovieViewHolder(View itemView, final Context context) {

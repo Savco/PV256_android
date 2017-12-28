@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme">
         <service
-            android:name=".MovieDownloadService"
+            android:name=".Networking.MovieDownloadService"
             android:enabled="true"
             android:exported="true">
         </service>

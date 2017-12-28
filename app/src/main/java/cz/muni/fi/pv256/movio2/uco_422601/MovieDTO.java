@@ -13,6 +13,8 @@ import java.util.Date;
 
 public class MovieDTO implements Serializable {
 
+    @SerializedName("id")
+    private String mId;
     @SerializedName("release_date")
     private String mRealeaseDate;
     @SerializedName("poster_path")
@@ -23,13 +25,17 @@ public class MovieDTO implements Serializable {
     private String mBackdrop;
     @SerializedName("vote_average")
     private String mPopularity;
+    @SerializedName("overview")
+    private String mOverview;
 
-    public MovieDTO(String realeaseDate, String coverPath, String backdrop, String title, String popularity) {
+    public MovieDTO(String id, String realeaseDate, String coverPath, String backdrop, String title, String popularity, String overview) {
+        mId = id;
         mRealeaseDate = realeaseDate;
         mCoverPath = coverPath;
         mTitle = title;
         mBackdrop = backdrop;
         mPopularity = popularity;
+        mOverview = overview;
     }
 
     public String getRealeaseDate() {
@@ -37,7 +43,7 @@ public class MovieDTO implements Serializable {
     }
 
     public long getRealeaseDateAsLong() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
             date = (Date)formatter.parse(getRealeaseDate());
@@ -45,6 +51,10 @@ public class MovieDTO implements Serializable {
             e.printStackTrace();
         }
         return date.getTime();
+    }
+
+    public String getId() {
+        return mId;
     }
 
     public String getCoverPath() {
@@ -66,4 +76,6 @@ public class MovieDTO implements Serializable {
     public Float getPopularityAsFloat() {
         return Float.parseFloat(getPopularity());
     }
+
+    public String getOverview() {return mOverview;}
 }

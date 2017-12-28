@@ -1,7 +1,10 @@
-package cz.muni.fi.pv256.movio2.uco_422601;
+package cz.muni.fi.pv256.movio2.uco_422601.Fragments;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +13,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+
+import cz.muni.fi.pv256.movio2.uco_422601.BuildConfig;
+import cz.muni.fi.pv256.movio2.uco_422601.Movie;
+import cz.muni.fi.pv256.movio2.uco_422601.R;
+import cz.muni.fi.pv256.movio2.uco_422601.Storage.MovieDbHelper;
+import cz.muni.fi.pv256.movio2.uco_422601.Storage.MovieManager;
 
 /**
  * Created by micha on 19. 10. 2017.
@@ -23,6 +35,12 @@ public class DescriptionFragment extends Fragment {
 
     private Context mContext;
     private Movie mMovie;
+
+    private SQLiteDatabase mDatabase;
+    private MovieManager mMovieManager;
+    private MovieDbHelper mDbHelper;
+    private FloatingActionButton floatingActionButton;
+    public static final String DATE_FORMAT = "dd.MM.yyyy";
 
     public static DescriptionFragment newInstance(Movie movie) {
         DescriptionFragment fragment = new DescriptionFragment();
@@ -41,6 +59,10 @@ public class DescriptionFragment extends Fragment {
         if (args != null) {
             mMovie = args.getParcelable(ARGS_MOVIE);
         }
+
+        mDbHelper = new MovieDbHelper(getActivity());
+        mDatabase = mDbHelper.getWritableDatabase();
+        mMovieManager = new MovieManager(mDatabase);
     }
 
     @Nullable
@@ -48,14 +70,42 @@ public class DescriptionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_description, container, false);
 
+        floatingActionButton = view.findViewById(R.id.add);
+        if (mMovieManager.containsId(mMovie.getId())) {
+            floatingActionButton.setImageResource(R.drawable.minus);
+        }
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.d("FilmDetailFragment", "onClickFloatingButton called");
+                    if (mMovieManager.containsId(mMovie.getId())) {
+                        mMovieManager.deleteMovie(mMovie);
+                        Toast.makeText(getActivity(), mMovie.getTitle() + " removed from database.", Toast.LENGTH_LONG).show();
+                        floatingActionButton.setImageResource(R.drawable.ic_plus_sign);
+                    }
+                    else {
+                        mMovieManager.createMovie(mMovie);
+                        Toast.makeText(getActivity(), mMovie.getTitle() + " added to database.", Toast.LENGTH_LONG).show();
+                        floatingActionButton.setImageResource(R.drawable.minus);
+                    }
+            }
+        });
+
         TextView titleTv = (TextView) view.findViewById(R.id.detail_movie);
+        //titleTv.setMovementMethod(new ScrollingMovementMethod());
         TextView titleLowTv = (TextView) view.findViewById(R.id.detail_movie_low);
+        titleLowTv.setMovementMethod(new ScrollingMovementMethod());
+        TextView date = (TextView) view.findViewById(R.id.date);
         ImageView posterImage = (ImageView) view.findViewById(R.id.poster_image);
         ImageView coverImage = (ImageView) view.findViewById(R.id.cover_image);
 
         if (mMovie != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+            date.setText("Premiere    " + formatter.format(mMovie.getRealeaseDate()));
             titleTv.setText(mMovie.getTitle());
-            titleLowTv.setText("To be done later");
+            titleLowTv.setText(mMovie.getOverview());
             Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + mMovie.getBackdrop()).into(posterImage);
             Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + mMovie.getCoverPath()).into(coverImage);
         }

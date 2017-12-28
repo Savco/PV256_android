@@ -5,3 +5,5 @@
              android:layout_height="match_parent"
              tools:context="cz.muni.fi.pv256.movio2.uco_422601.MovieDetailActivity"
              tools:ignore="MergeRootFrame" />
+
+

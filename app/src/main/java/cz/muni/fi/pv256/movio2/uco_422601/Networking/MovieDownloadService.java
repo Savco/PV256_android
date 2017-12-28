@@ -1,4 +1,4 @@
-package cz.muni.fi.pv256.movio2.uco_422601;
+package cz.muni.fi.pv256.movio2.uco_422601.Networking;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -15,6 +15,12 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import cz.muni.fi.pv256.movio2.uco_422601.Constants;
+import cz.muni.fi.pv256.movio2.uco_422601.Fragments.MainFragment;
+import cz.muni.fi.pv256.movio2.uco_422601.MovieAPI;
+import cz.muni.fi.pv256.movio2.uco_422601.MovieDTO;
+import cz.muni.fi.pv256.movio2.uco_422601.MovieList;
+import cz.muni.fi.pv256.movio2.uco_422601.R;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
