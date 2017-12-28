@@ -3,8 +3,6 @@ package cz.muni.fi.pv256.movio2.uco_422601;
 import android.app.Application;
 import android.os.Build;
 import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 public class App extends Application {
 

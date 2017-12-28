@@ -1,0 +1,20 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppBaseTheme" parent="">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- inherit from the material theme -->
+    <style name="AppCustomTheme" parent="AppBaseTheme">
+        <item name="colorPrimary">@color/colorSecondPrimary</item>
+        <item name="colorPrimaryDark">@color/colorSecondDark</item>
+        <item name="colorAccent">@color/colorSecondAccent</item>
+    </style>
+
+
+
+</resources>
