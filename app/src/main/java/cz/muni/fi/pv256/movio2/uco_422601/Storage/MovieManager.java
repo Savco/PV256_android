@@ -8,6 +8,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.muni.fi.pv256.movio2.uco_422601.BuildConfig;
 import cz.muni.fi.pv256.movio2.uco_422601.Movie;
 
 /**
@@ -97,7 +98,7 @@ public class MovieManager {
     }
 
     public boolean containsId(Long id) {
-        Log.d("FilmDetailFragment", "id je ->" + id );
+        if (BuildConfig.LOGGING) Log.d("MovieManager", "id je ->" + id );
         String Query = "Select * from " + MovieContract.MovieEntry.TABLE_NAME + " where " + MovieContract.MovieEntry._ID + " = " + id;
         Cursor cursor = mDatabase.rawQuery(Query, null);
         if(cursor.getCount() <= 0){

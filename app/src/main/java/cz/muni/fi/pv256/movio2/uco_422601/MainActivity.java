@@ -26,6 +26,7 @@ import java.util.TimeZone;
 
 import cz.muni.fi.pv256.movio2.uco_422601.Fragments.DescriptionFragment;
 import cz.muni.fi.pv256.movio2.uco_422601.Fragments.MainFragment;
+import cz.muni.fi.pv256.movio2.uco_422601.Sync.UpdaterSyncAdapter;
 
 /**
  * Created by micha on 12. 10. 2017.
@@ -52,15 +53,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnMo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, " onStart method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onStart method");
 
         setContentView(R.layout.activity_app);
-        if (findViewById(R.id.movie_detail_container) != null) {
+        if (findViewById(R.id.detail_container) != null) {
             mTwoPane = true;
 
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.movie_detail_container, new DescriptionFragment(), DescriptionFragment.TAG)
+                        .add(R.id.detail_container, new DescriptionFragment(), DescriptionFragment.TAG)
                         .commit();
             }
         } else {
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnMo
         mData = new ArrayList<Object>();
         toolbar = (Toolbar) findViewById(R.id.my_toolbar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
+        UpdaterSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnMo
 
             DescriptionFragment fragment = DescriptionFragment.newInstance(movie);
             fm.beginTransaction()
-                    .replace(R.id.movie_detail_container, fragment, DescriptionFragment.TAG)
+                    .replace(R.id.detail_container, fragment, DescriptionFragment.TAG)
                     .commit();
 
         } else {
@@ -122,6 +124,20 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnMo
                 return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.synchronization:
+                if(BuildConfig.LOGGING) Log.d(TAG, "refresh button clicked");
+                UpdaterSyncAdapter.syncImmediately(getApplicationContext());
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public void onStart() {
@@ -155,6 +171,5 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnMo
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
-
     }
 }

@@ -3,6 +3,7 @@ package cz.muni.fi.pv256.movio2.uco_422601;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import cz.muni.fi.pv256.movio2.uco_422601.Fragments.DescriptionFragment;
 
@@ -18,6 +19,14 @@ public class MovieDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.description_toolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         if(savedInstanceState == null){
             Movie movie = getIntent().getParcelableExtra(EXTRA_MOVIE);

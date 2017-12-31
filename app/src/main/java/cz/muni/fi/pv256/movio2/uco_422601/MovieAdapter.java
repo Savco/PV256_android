@@ -36,7 +36,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, " creating ViewHolder, type:" + viewType);
+        if (BuildConfig.LOGGING) Log.d(TAG, " creating ViewHolder, type:" + viewType);
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view;
         switch(viewType) {
@@ -59,7 +59,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Log.d(TAG, "binding ViewHolder");
+        if (BuildConfig.LOGGING) Log.d(TAG, "binding ViewHolder");
         int rowType = getItemViewType(position);
         switch(rowType){
             case TYPE_MOVIE:
@@ -111,7 +111,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d(TAG, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" +getAdapterPosition() + "aaaaaaaaaaaaa");
                     if(context != null) {
                         ((MainActivity) context).onMovieSelect(getAdapterPosition());
                     }

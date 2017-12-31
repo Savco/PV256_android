@@ -2,25 +2,46 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
     tools:context="cz.muni.fi.pv256.movio2.uco_422601.MainActivity">
 
-    <fragment
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/names_fragment"
-        android:name="cz.muni.fi.pv256.movio2.uco_422601.MainFragment"
-        tools:layout="@layout/fragment_names"/>
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="@android:color/white"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        android:theme="@style/AppBaseTheme"/>
 
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:id="@+id/movie_detail_container"
-        android:layout_weight="2"
-        android:name="cz.muni.fi.pv256.movio2.uco_422601.DescriptionFragment"
-        tools:layout="@layout/fragment_description"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:orientation="horizontal"
+        tools:context="cz.muni.fi.pv256.movio2.uco_422601.MainActivity">
 
+        <fragment
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_main"
+            android:layout_weight="0.33"
+            android:name="cz.muni.fi.pv256.movio2.uco_422601.Fragments.MainFragment"
+            tools:context="cz.muni.fi.pv256.movio2.uco_422601.MainActivity"
+            tools:layout="@layout/fragment_names"/>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/detail_container"
+            android:layout_weight="0.67"
+            android:name="cz.muni.fi.pv256.movio2.uco_422601.Fragments.DescriptionFragment"
+            tools:context="cz.muni.fi.pv256.movio2.uco_422601.MainActivity"
+            tools:layout="@layout/fragment_description"/>
+
+    </LinearLayout>
 </LinearLayout>

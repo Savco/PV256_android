@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,56 +59,68 @@ public class DescriptionFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             mMovie = args.getParcelable(ARGS_MOVIE);
+            Log.d(TAG, "movienotempty");
         }
-
-        mDbHelper = new MovieDbHelper(getActivity());
-        mDatabase = mDbHelper.getWritableDatabase();
-        mMovieManager = new MovieManager(mDatabase);
+        else {
+            mMovie = null;
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_description, container, false);
-
-        floatingActionButton = view.findViewById(R.id.add);
-        if (mMovieManager.containsId(mMovie.getId())) {
-            floatingActionButton.setImageResource(R.drawable.minus);
+        View view;
+        if (mMovie == null) {
+            view = inflater.inflate(R.layout.empty_description, container, false);
+            return  view;
         }
+        else {
+            mDbHelper = new MovieDbHelper(getActivity());
+            mDatabase = mDbHelper.getWritableDatabase();
+            mMovieManager = new MovieManager(mDatabase);
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            Log.d(TAG, mMovie.toString());
+            view = inflater.inflate(R.layout.fragment_description, container, false);
 
-            @Override
-            public void onClick(View v) {
-                Log.d("FilmDetailFragment", "onClickFloatingButton called");
+            floatingActionButton = view.findViewById(R.id.add);
+            if (mMovieManager.containsId(mMovie.getId())) {
+                floatingActionButton.setImageResource(R.drawable.minus);
+            }
+
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if (BuildConfig.LOGGING) Log.d(TAG, "onClickFloatingButton called");
                     if (mMovieManager.containsId(mMovie.getId())) {
                         mMovieManager.deleteMovie(mMovie);
-                        Toast.makeText(getActivity(), mMovie.getTitle() + " removed from database.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mMovie.getTitle() + " removed from database.", Toast.LENGTH_SHORT).show();
                         floatingActionButton.setImageResource(R.drawable.ic_plus_sign);
-                    }
-                    else {
+                    } else {
                         mMovieManager.createMovie(mMovie);
-                        Toast.makeText(getActivity(), mMovie.getTitle() + " added to database.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mMovie.getTitle() + " added to database.", Toast.LENGTH_SHORT).show();
                         floatingActionButton.setImageResource(R.drawable.minus);
                     }
+                }
+            });
+
+            TextView titleTv = (TextView) view.findViewById(R.id.detail_movie);
+            TextView titleLowTv = (TextView) view.findViewById(R.id.detail_movie_low);
+            titleLowTv.setMovementMethod(new ScrollingMovementMethod());
+            TextView date = (TextView) view.findViewById(R.id.date);
+            ImageView posterImage = (ImageView) view.findViewById(R.id.poster_image);
+            ImageView coverImage = (ImageView) view.findViewById(R.id.cover_image);
+            Log.d(TAG, mMovie.toString());
+
+            if (mMovie != null) {
+                SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+                date.setText("Premiere    " + formatter.format(mMovie.getRealeaseDate()));
+                titleTv.setText(mMovie.getTitle());
+                titleLowTv.setText(mMovie.getOverview());
+                Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + mMovie.getBackdrop()).into(posterImage);
+                Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + mMovie.getCoverPath()).into(coverImage);
             }
-        });
-
-        TextView titleTv = (TextView) view.findViewById(R.id.detail_movie);
-        //titleTv.setMovementMethod(new ScrollingMovementMethod());
-        TextView titleLowTv = (TextView) view.findViewById(R.id.detail_movie_low);
-        titleLowTv.setMovementMethod(new ScrollingMovementMethod());
-        TextView date = (TextView) view.findViewById(R.id.date);
-        ImageView posterImage = (ImageView) view.findViewById(R.id.poster_image);
-        ImageView coverImage = (ImageView) view.findViewById(R.id.cover_image);
-
-        if (mMovie != null) {
-            SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
-            date.setText("Premiere    " + formatter.format(mMovie.getRealeaseDate()));
-            titleTv.setText(mMovie.getTitle());
-            titleLowTv.setText(mMovie.getOverview());
-            Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + mMovie.getBackdrop()).into(posterImage);
-            Picasso.with(mContext).load("https://image.tmdb.org/t/p/w500/" + mMovie.getCoverPath()).into(coverImage);
+            //mDatabase.close();
         }
         return view;
     }
@@ -115,33 +128,33 @@ public class DescriptionFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.d(TAG, " onAttach method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onAttach method");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, " onStart method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onStart method");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, " onResume method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onResume method");
     }
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, " onPause method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onPause method");
     }
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, " onStop method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onStop method");
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, " onDestroy method");
+        if (BuildConfig.LOGGING) Log.d(TAG, " onDestroy method");
     }
 }

@@ -216,6 +216,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     }
     @Override
     public void onDestroy() {
+        //if (mDatabase!= null) mDatabase.close();
         super.onDestroy();
         if (BuildConfig.LOGGING) Log.d(TAG, " onDestroy method");
     }

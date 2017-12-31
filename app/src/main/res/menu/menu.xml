@@ -10,4 +10,10 @@
         android:actionLayout="@layout/menu_switch"
         android:title=""
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/synchronization"
+        android:icon="@drawable/sync"
+        android:title=""
+        app:showAsAction="always"/>
 </menu>
