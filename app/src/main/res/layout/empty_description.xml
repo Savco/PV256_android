@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/empty_description"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:name="cz.muni.fi.pv256.movio2.uco_422601.Fragments.DescriptionFragment"
+        android:text="No movie has yet been selected"
+        android:textColor="@color/colorSecondDark"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+</LinearLayout>
