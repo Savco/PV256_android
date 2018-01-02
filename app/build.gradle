@@ -31,7 +31,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 26
 
-        resConfigs "sk", "ja"
+        resConfigs "en", "sk"
         //resConfigs "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"
 
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
