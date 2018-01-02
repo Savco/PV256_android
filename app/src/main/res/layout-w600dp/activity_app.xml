@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    tools:context="cz.muni.fi.pv256.movio2.uco_422601.MainActivity">
+
+    <fragment
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/names_fragment"
+        android:layout_weight="1"
+        android:name="cz.muni.fi.pv256.movio2.uco_422601.MainFragment"
+        tools:layout="@layout/fragment_names"/>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/movie_detail_container"
+        android:layout_weight="2"
+        android:name="cz.muni.fi.pv256.movio2.uco_422601.DescriptionFragment"
+        tools:layout="@layout/fragment_description"/>
+
+</LinearLayout>
